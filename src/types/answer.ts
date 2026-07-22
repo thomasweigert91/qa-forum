@@ -7,6 +7,5 @@ export type Answer = {
 };
 
 export type CreateAnswerInput = {
-  createdById: string;
   body: string;
 };

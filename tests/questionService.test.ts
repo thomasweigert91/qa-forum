@@ -5,6 +5,7 @@ import {
   deleteQuestion,
   getQuestionById,
   searchQuestions,
+  updateQuestion,
 } from "../src/services/questionService";
 
 describe("questionService", () => {
@@ -64,6 +65,26 @@ describe("questionService", () => {
 
     const result = searchQuestions("TYPESCRIPT");
     expect(result).toHaveLength(1);
+  });
+
+  test("updates a question", () => {
+    const question = createQuestion("user-1", {
+      title: "TypeScript Interfaces",
+      body: "Wie funktionieren Interfaces?",
+    });
+
+    const updatedQuestion = updateQuestion(
+      question.id,
+      {
+        body: "IST UPDATED",
+        title: "DIES WURDE UPDATED",
+      },
+      "user-1",
+    );
+
+    expect(updatedQuestion.title).toBe("DIES WURDE UPDATED");
+    expect(getQuestionById(question.id)).toEqual(updatedQuestion);
+    expect(updatedQuestion.body).toBe("IST UPDATED");
   });
 
   test("deletes a question", () => {
