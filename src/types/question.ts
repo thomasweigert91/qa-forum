@@ -7,3 +7,13 @@ export type Question = {
   createdAt: Date;
   createdById: string;
 };
+
+export type CreateQuestionInput = {
+  title: string;
+  body: string;
+};
+
+export type UpdateQuestionInput = {
+  title: string;
+  body: string;
+};
