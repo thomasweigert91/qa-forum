@@ -5,3 +5,8 @@ export type Answer = {
   createdAt: Date;
   createdById: string;
 };
+
+export type CreateAnswerInput = {
+  createdById: string;
+  body: string;
+};
