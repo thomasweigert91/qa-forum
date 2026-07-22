@@ -1,6 +1,7 @@
 export type Answer = {
   readonly id: string;
+  questionId: string;
   body: string;
   createdAt: Date;
-  createdBy: string;
+  createdById: string;
 };

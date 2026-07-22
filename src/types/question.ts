@@ -5,6 +5,5 @@ export type Question = {
   title: string;
   body: string;
   createdAt: Date;
-  createdBy: string;
-  answers: Answer[];
+  createdById: string;
 };
