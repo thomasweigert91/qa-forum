@@ -21,6 +21,12 @@ export function getQuestionById(questionId: string): Question {
   return question;
 }
 
+export const getQuestionsByTitle = (value: string) => {
+  return questions.filter((q) =>
+    q.title.toLowerCase().includes(value.toLowerCase()),
+  );
+};
+
 export function createQuestion(
   userId: string,
   input: CreateQuestionInput,

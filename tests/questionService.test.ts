@@ -4,7 +4,7 @@ import {
   createQuestion,
   deleteQuestion,
   getQuestionById,
-  searchQuestions,
+  getQuestionsByTitle,
   updateQuestion,
 } from "../src/services/questionService";
 
@@ -52,7 +52,7 @@ describe("questionService", () => {
       body: "Wie installiere ich Bun?",
     });
 
-    const result = searchQuestions("typescript");
+    const result = getQuestionsByTitle("typescript");
     expect(result).toHaveLength(1);
     expect(result[0]?.title).toBe("TypeScript Interfaces");
   });
@@ -63,7 +63,7 @@ describe("questionService", () => {
       body: "Wie funktionieren Interfaces?",
     });
 
-    const result = searchQuestions("TYPESCRIPT");
+    const result = getQuestionsByTitle("TYPESCRIPT");
     expect(result).toHaveLength(1);
   });
 
@@ -73,14 +73,10 @@ describe("questionService", () => {
       body: "Wie funktionieren Interfaces?",
     });
 
-    const updatedQuestion = updateQuestion(
-      question.id,
-      {
-        body: "IST UPDATED",
-        title: "DIES WURDE UPDATED",
-      },
-      "user-1",
-    );
+    const updatedQuestion = updateQuestion(question.id, {
+      body: "IST UPDATED",
+      title: "DIES WURDE UPDATED",
+    });
 
     expect(updatedQuestion.title).toBe("DIES WURDE UPDATED");
     expect(getQuestionById(question.id)).toEqual(updatedQuestion);
@@ -93,7 +89,7 @@ describe("questionService", () => {
       body: "Wie installiere ich Bun?",
     });
 
-    deleteQuestion("user-2", question.id);
+    deleteQuestion(question.id);
 
     expect(questions).toHaveLength(0);
   });

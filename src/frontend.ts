@@ -4,7 +4,7 @@ import {
   getQuestionById,
   getQuestions,
   updateQuestion,
-} from "./src/services/questionService";
+} from "./services/questionService";
 
 const questions = getQuestions();
 const question = getQuestionById("question-4");
@@ -17,14 +17,6 @@ const newQuestion = createQuestion("user-3", {
 console.log("new Question", newQuestion);
 console.log(questions);
 
-deleteQuestion("user-1", "question-2");
-
 console.log(questions);
-
-updateQuestion(
-  "question-4",
-  { title: "NEUER TITLE", body: "Irgendwas neues" },
-  "user-4",
-);
 
 console.log(questions);

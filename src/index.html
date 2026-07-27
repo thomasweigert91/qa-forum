@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>DevAnswers</title>
+
+    <link rel="stylesheet" href="./styles/base.css" />
+    <link rel="stylesheet" href="./styles/layout.css" />
+    <link rel="stylesheet" href="./styles/components.css" />
+  </head>
+
+  <body>
+    <header class="app-header">
+      <a class="app-logo" href="./index.html">DevAnswers</a>
+
+      <nav class="main-navigation" aria-label="Hauptnavigation">
+        <a href="./index.html">Home</a>
+        <a href="./index.html">Questions</a>
+        <a href="#">Tags</a>
+      </nav>
+
+      <form class="header-search" role="search">
+        <label class="visually-hidden" for="header-search">
+          Fragen durchsuchen
+        </label>
+
+        <input
+          id="header-search"
+          name="search"
+          type="search"
+          placeholder="Search questions..."
+        />
+      </form>
+
+      <a class="button button-primary" href="./ask.html"> Ask a question </a>
+    </header>
+
+    <div class="app-layout">
+      <aside class="sidebar">
+        <nav class="sidebar-navigation" aria-label="Seitennavigation">
+          <ul class="sidebar-list">
+            <li>
+              <a class="sidebar-link sidebar-link-active" href="./index.html">
+                Home
+              </a>
+            </li>
+
+            <li>
+              <a class="sidebar-link" href="./index.html">My feed</a>
+            </li>
+
+            <li>
+              <a class="sidebar-link" href="#">Bookmarks</a>
+            </li>
+
+            <li>
+              <a class="sidebar-link" href="#">My questions</a>
+            </li>
+
+            <li>
+              <a class="sidebar-link" href="#">My answers</a>
+            </li>
+          </ul>
+
+          <section class="sidebar-section">
+            <h2 class="sidebar-heading">Filter by</h2>
+
+            <ul class="sidebar-list">
+              <li>
+                <button
+                  class="sidebar-filter sidebar-filter-active"
+                  type="button"
+                  data-filter="all"
+                >
+                  All questions
+                </button>
+              </li>
+
+              <li>
+                <button
+                  class="sidebar-filter"
+                  type="button"
+                  data-filter="unanswered"
+                >
+                  Unanswered
+                </button>
+              </li>
+
+              <li>
+                <button
+                  class="sidebar-filter"
+                  type="button"
+                  data-filter="answered"
+                >
+                  Answered
+                </button>
+              </li>
+            </ul>
+          </section>
+
+          <section class="sidebar-section">
+            <h2 class="sidebar-heading">Categories</h2>
+
+            <ul class="sidebar-list">
+              <li>
+                <button
+                  class="sidebar-filter"
+                  type="button"
+                  data-category="javascript"
+                >
+                  JavaScript
+                </button>
+              </li>
+
+              <li>
+                <button
+                  class="sidebar-filter"
+                  type="button"
+                  data-category="typescript"
+                >
+                  TypeScript
+                </button>
+              </li>
+
+              <li>
+                <button
+                  class="sidebar-filter"
+                  type="button"
+                  data-category="react"
+                >
+                  React
+                </button>
+              </li>
+
+              <li>
+                <button
+                  class="sidebar-filter"
+                  type="button"
+                  data-category="node"
+                >
+                  Node.js
+                </button>
+              </li>
+            </ul>
+          </section>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <section class="question-feed" aria-labelledby="question-feed-title">
+          <header class="section-header">
+            <div>
+              <h1 id="question-feed-title">Recent questions</h1>
+              <p>Find answers or help other developers.</p>
+            </div>
+
+            <label>
+              <span class="visually-hidden">Fragen sortieren</span>
+
+              <select id="question-sort" name="sort">
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="answers">Most answers</option>
+              </select>
+            </label>
+          </header>
+
+          <div class="question-list" id="question-list">
+            <article class="question-card">
+              <div class="question-stats">
+                <span>12 votes</span>
+                <span>8 answers</span>
+                <span>320 views</span>
+              </div>
+
+              <div class="question-content">
+                <h2 class="question-title">
+                  <a href="./question.html?id=question-1">
+                    How do I structure an Express project?
+                  </a>
+                </h2>
+
+                <p class="question-preview">
+                  I am building my first Express backend and want to separate
+                  routes, services and data correctly.
+                </p>
+
+                <ul class="tag-list" aria-label="Tags">
+                  <li class="tag">express</li>
+                  <li class="tag">typescript</li>
+                  <li class="tag">node.js</li>
+                </ul>
+
+                <footer class="question-meta">
+                  <span>Asked by Thomas</span>
+                  <time datetime="2026-07-26T18:00"> 2 hours ago </time>
+                </footer>
+              </div>
+            </article>
+
+            <article class="question-card">
+              <div class="question-stats">
+                <span>5 votes</span>
+                <span>1 answer</span>
+                <span>84 views</span>
+              </div>
+
+              <div class="question-content">
+                <h2 class="question-title">
+                  <a href="./question.html?id=question-2">
+                    What is the difference between Map and Set?
+                  </a>
+                </h2>
+
+                <p class="question-preview">
+                  I understand arrays and objects, but I am unsure when Map or
+                  Set should be used.
+                </p>
+
+                <ul class="tag-list" aria-label="Tags">
+                  <li class="tag">javascript</li>
+                  <li class="tag">map</li>
+                  <li class="tag">set</li>
+                </ul>
+
+                <footer class="question-meta">
+                  <span>Asked by Lydia</span>
+                  <time datetime="2026-07-26T14:00"> 6 hours ago </time>
+                </footer>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+    <div class="modal" id="modal" aria-hidden="true">
+      <div class="modal__backdrop" data-close-modal></div>
+
+      <section
+        class="modal__content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <button
+          class="modal__close"
+          type="button"
+          aria-label="Modal schließen"
+          data-close-modal
+        >
+          ×
+        </button>
+
+        <h2 id="modal-title">Frage bearbeiten</h2>
+
+        <form class="modal__form">
+          <label for="question-title">Titel</label>
+          <input
+            id="question-title"
+            name="title"
+            type="text"
+            placeholder="Titel der Frage"
+          />
+
+          <label for="question-body">Beschreibung</label>
+          <textarea
+            id="question-body"
+            name="body"
+            rows="6"
+            placeholder="Beschreibe deine Frage"
+          ></textarea>
+
+          <div class="modal__actions">
+            <button
+              class="button button--secondary"
+              type="button"
+              data-close-modal
+            >
+              Abbrechen
+            </button>
+
+            <button class="button button--primary" type="submit">
+              Speichern
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <script type="module" src="frontend.ts"></script>
+  </body>
+</html>
