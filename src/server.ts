@@ -1,47 +1,37 @@
 import express from "express";
 import nunjucks from "nunjucks";
 import path from "node:path";
-import { runMigrations } from "./database/seed";
 import { questionApiRouter } from "./routes/questionRoutes";
 import { pageRouter } from "./routes/pageRoutes";
 
-async function startServer(): Promise<void> {
-  runMigrations();
+const app = express();
+const port = Number(process.env["PORT"]) || 8000;
 
-  const app = express();
-  const port = Number(process.env["PORT"]) || 8000;
+const viewsPath = path.join(process.cwd(), "src", "views");
+const publicPath = path.join(process.cwd(), "public");
 
-  const viewsPath = path.join(process.cwd(), "src", "views");
-  const publicPath = path.join(process.cwd(), "public");
+nunjucks.configure(viewsPath, {
+  autoescape: true,
+  express: app,
+  watch: process.env["NODE_ENV"] !== "production",
+  noCache: process.env["NODE_ENV"] !== "production",
+});
 
-  nunjucks.configure(viewsPath, {
-    autoescape: true,
-    express: app,
-    watch: process.env["NODE_ENV"] !== "production",
-    noCache: process.env["NODE_ENV"] !== "production",
-  });
+app.set("view engine", "njk");
+app.set("views", viewsPath);
 
-  app.set("view engine", "njk");
-  app.set("views", viewsPath);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.static(publicPath, {
+    index: false,
+  }),
+);
 
-  app.use(
-    express.static(publicPath, {
-      index: false,
-    }),
-  );
+app.use("/", pageRouter);
+app.use("/api/questions", questionApiRouter);
 
-  app.use("/", pageRouter);
-  app.use("/api/questions", questionApiRouter);
-
-  app.listen(port, "0.0.0.0", () => {
-    console.log(`Server läuft auf Port ${port}`);
-  });
-}
-
-startServer().catch((error: unknown) => {
-  console.error("Server konnte nicht gestartet werden:", error);
-  process.exit(1);
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server läuft auf Port ${port}`);
 });
