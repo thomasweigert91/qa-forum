@@ -1,0 +1,50 @@
+{% extends "layouts/base.html" %} {% block title %}Frage stellen | QA Forum{%
+endblock %} {% block content %}
+<section class="create-page">
+  <a class="back-link" href="/">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="m15 18-6-6 6-6" />
+    </svg>
+    Zurück zu allen Fragen
+  </a>
+
+  <header class="create-page__header">
+    <p class="question-overview__eyebrow">Community</p>
+    <h1>Neue Frage stellen</h1>
+    <p>Beschreibe dein Problem so konkret wie möglich.</p>
+  </header>
+
+  <form class="question-form" action="/api/questions" method="post">
+    <label for="title">
+      <span>Titel</span>
+      <small>Fasse deine Frage in einem Satz zusammen.</small>
+    </label>
+    <input
+      id="title"
+      name="title"
+      type="text"
+      placeholder="z. B. Wie typisiere ich eine API-Antwort?"
+      required
+    />
+
+    <label for="body">
+      <span>Beschreibung</span>
+      <small>Ergänze Kontext, Code und was du bereits versucht hast.</small>
+    </label>
+    <textarea
+      id="body"
+      name="body"
+      rows="9"
+      placeholder="Beschreibe deine Frage..."
+      required
+    ></textarea>
+
+    <div class="question-form__actions">
+      <a class="secondary-button" href="/">Abbrechen</a>
+      <button class="primary-button" type="submit">
+        Frage veröffentlichen
+      </button>
+    </div>
+  </form>
+</section>
+{% endblock %}

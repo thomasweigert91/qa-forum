@@ -1,0 +1,130 @@
+{% extends "layouts/base.html" %} {% block title %}Aktuelle Fragen | QA Forum{%
+endblock %} {% block content %}
+<section class="question-overview">
+  <header class="question-overview__header">
+    <p class="question-overview__eyebrow">Community</p>
+    <h1 class="question-overview__title">Aktuelle Fragen</h1>
+    <p class="question-overview__intro">
+      Entdecke Fragen aus der Community und teile dein Wissen.
+    </p>
+    <a class="primary-button" href="/new">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 5v14M5 12h14" />
+      </svg>
+      <span>Frage stellen</span>
+    </a>
+  </header>
+
+  {% if questions.length === 0 %}
+  <div class="empty-state">
+    <span class="empty-state__icon">?</span>
+    <h2>Noch keine Fragen</h2>
+    <p>Sei die erste Person, die eine Frage mit der Community teilt.</p>
+  </div>
+  {% else %}
+  <ul class="question-list">
+    {% for question in questions %}
+    <li class="question-list__item">
+      <article class="question-card question-card--{{ loop.index }}">
+        <div class="question-card__answers">
+          <span class="question-card__answer-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 11.5a8 8 0 1 1-3.5-6.6A8 8 0 0 1 20 11.5Z" />
+              <path d="m7 19-3 1 1-3" />
+            </svg>
+          </span>
+          <strong>{{ question.answerCount }}</strong>
+          <span>
+            {% if question.answerCount === 1 %}Antwort{% else %}Antworten{%
+            endif %}
+          </span>
+        </div>
+
+        <div class="question-card__main">
+          <div class="question-card__topic">
+            {% if loop.index === 1 %}TypeScript {% elif loop.index === 2
+            %}JavaScript {% elif loop.index === 3 %}Bun {% else %}Async / Await
+            {% endif %}
+          </div>
+          <h2 class="question-card__title">
+            <a class="question-card__link" href="/questions/{{ question.id }}">
+              {{ question.title }}
+            </a>
+          </h2>
+          <p class="question-card__body">{{ question.body }}</p>
+
+          <footer class="question-card__footer">
+            <div class="question-card__author">
+              <span class="avatar">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="8" r="3.5" />
+                  <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
+                </svg>
+              </span>
+              <span>
+                <strong>{{ question.createdById }}</strong>
+                <small>Erstellt von</small>
+              </span>
+            </div>
+
+            <time
+              class="question-card__date"
+              datetime="{{ question.createdAt }}"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M6 3v3M18 3v3M4 8h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z"
+                />
+              </svg>
+              <span>{{ question.createdAtFormatted }}</span>
+            </time>
+          </footer>
+        </div>
+        <div>
+          <button
+            class="bookmark-button"
+            type="button"
+            aria-label="Frage merken"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M6 4.8A1.8 1.8 0 0 1 7.8 3h8.4A1.8 1.8 0 0 1 18 4.8V21l-6-4-6 4Z"
+              />
+            </svg>
+          </button>
+          <form
+            action="/questions/{{ question.id }}/delete"
+            method="post"
+            class="question-card__delete-form"
+          >
+            <button
+              type="submit"
+              class="question-card__delete-button"
+              aria-label="Frage {{ question.title }} löschen"
+            >
+              Löschen
+            </button>
+          </form>
+        </div>
+      </article>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %} {% if questions.length > 0 %}
+  <nav class="pagination" aria-label="Seitennavigation">
+    <a
+      class="pagination__page pagination__page--active"
+      href="/"
+      aria-current="page"
+      >1</a
+    >
+    <a class="pagination__page" href="#seite-2">2</a>
+    <a class="pagination__next" href="#seite-2" aria-label="Nächste Seite">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m9 6 6 6-6 6" />
+      </svg>
+    </a>
+  </nav>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,11 +1,13 @@
-import type { Answer } from "./answer";
-
 export type Question = {
-  readonly id: string;
+  id: string;
   title: string;
   body: string;
-  createdAt: Date;
+  createdAt: string;
   createdById: string;
+};
+
+export type QuestionWithAnswerCount = Question & {
+  answerCount: number;
 };
 
 export type CreateQuestionInput = {
@@ -14,6 +16,6 @@ export type CreateQuestionInput = {
 };
 
 export type UpdateQuestionInput = {
-  title: string;
-  body: string;
+  title?: string;
+  body?: string;
 };

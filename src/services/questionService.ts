@@ -1,109 +1,75 @@
-import { questions } from "../data/questions";
+import { randomUUID } from "node:crypto";
+
 import type {
   CreateQuestionInput,
   Question,
+  QuestionWithAnswerCount,
   UpdateQuestionInput,
-} from "../types/question";
+} from "@/types/question";
 
-export const createQuestion = (
-  createdById: string,
+import {
+  deleteQuestionById,
+  findAllQuestions,
+  findAllQuestionsWithAnswerCount,
+  findQuestionById,
+  findQuestionsByTitle,
+  insertQuestion,
+  updateQuestionById,
+} from "@/repositories/questionRepository";
+
+export function getQuestions(): Question[] {
+  return findAllQuestions();
+}
+
+export function getQuestionsWithAnswerCount(): QuestionWithAnswerCount[] {
+  return findAllQuestionsWithAnswerCount();
+}
+
+export function getQuestionById(questionId: string): Question | undefined {
+  return findQuestionById(questionId);
+}
+
+export function getQuestionsByTitle(searchTerm: string): Question[] {
+  const normalizedSearchTerm = searchTerm.trim();
+
+  if (!normalizedSearchTerm) {
+    return findAllQuestions();
+  }
+
+  return findQuestionsByTitle(normalizedSearchTerm);
+}
+
+export function createQuestion(
+  userId: string,
   input: CreateQuestionInput,
-): Question => {
-  const title = input.title.trim();
-  const body = input.body.trim();
-
-  if (!title) {
-    throw new Error("Question title is required");
-  }
-
-  if (!body) {
-    throw new Error("Question body is required");
-  }
-
+): Question {
   const question: Question = {
-    id: crypto.randomUUID(),
-    title,
-    body,
-    createdAt: new Date(),
-    createdById,
+    id: randomUUID(),
+    title: input.title.trim(),
+    body: input.body.trim(),
+    createdAt: new Date().toISOString(),
+    createdById: userId,
   };
 
-  questions.push(question);
+  return insertQuestion(question);
+}
 
-  return question;
-};
-
-export const getQuestionById = (questionId: string): Question | undefined => {
-  return questions.find((question) => question.id === questionId);
-};
-
-export const getQuestions = (): Question[] => {
-  return questions;
-};
-
-export const searchQuestions = (searchTerm: string): Question[] => {
-  const normalizedTerm = searchTerm.trim().toLowerCase();
-
-  return questions.filter((question) =>
-    question.title.toLowerCase().includes(normalizedTerm),
-  );
-};
-
-export const updateQuestion = (
+export function updateQuestion(
   questionId: string,
   input: UpdateQuestionInput,
-  userId: string,
-): Question => {
-  const question = getQuestionById(questionId);
+): Question | undefined {
+  const existingQuestion = findQuestionById(questionId);
 
-  if (!question) {
-    throw new Error("Question not found");
-  }
-  if (question.createdById !== userId) {
-    throw new Error("Not authorized to update this question");
+  if (!existingQuestion) {
+    return undefined;
   }
 
-  if (input.title !== undefined) {
-    const title = input.title.trim();
+  const title = input.title?.trim() ?? existingQuestion.title;
+  const body = input.body?.trim() ?? existingQuestion.body;
 
-    if (!title) {
-      throw new Error("Question title cannot be empty");
-    }
+  return updateQuestionById(questionId, title, body);
+}
 
-    question.title = title;
-  }
-
-  if (input.body !== undefined) {
-    const body = input.body.trim();
-
-    if (!body) {
-      throw new Error("Question body cannot be empty");
-    }
-
-    question.body = body;
-  }
-
-  return question;
-};
-
-export const deleteQuestion = (userId: string, questionId: string): void => {
-  const questionIndex = questions.findIndex(
-    (question) => question.id === questionId,
-  );
-
-  if (questionIndex === -1) {
-    throw new Error("Question not found");
-  }
-
-  const question = questions[questionIndex];
-
-  if (!question) {
-    throw new Error("Question not found");
-  }
-
-  if (question.createdById !== userId) {
-    throw new Error("Not authorized to delete this question");
-  }
-
-  questions.splice(questionIndex, 1);
-};
+export function deleteQuestion(questionId: string): boolean {
+  return deleteQuestionById(questionId);
+}

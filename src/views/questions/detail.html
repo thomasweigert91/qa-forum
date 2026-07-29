@@ -1,0 +1,109 @@
+{% extends "layouts/base.html" %} {% block title %}{{ question.title }} | QA
+Forum{% endblock %} {% block content %}
+<div class="detail-page">
+  <a class="back-link" href="/">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="m15 18-6-6 6-6" />
+    </svg>
+    Zurück zu allen Fragen
+  </a>
+
+  <article class="question-detail">
+    <header class="question-detail__header">
+      <p class="question-detail__eyebrow">Community-Frage</p>
+      <h1 class="question-detail__title">{{ question.title }}</h1>
+      <div class="question-detail__meta">
+        <span class="avatar">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8" r="3.5" />
+            <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
+          </svg>
+        </span>
+        <strong>{{ question.createdById }}</strong>
+        <span aria-hidden="true">·</span>
+        <time datetime="{{ question.createdAt }}"
+          >{{ question.createdAtFormatted }}</time
+        >
+      </div>
+    </header>
+
+    <p class="question-detail__body">{{ question.body }}</p>
+  </article>
+
+  <section class="answers">
+    <header class="answers__header">
+      <div>
+        <p class="answers__eyebrow">Diskussion</p>
+        <h2>
+          {{ answers.length }} {% if answers.length === 1 %}Antwort{% else
+          %}Antworten{% endif %}
+        </h2>
+      </div>
+      <button
+        class="secondary-button"
+        type="button"
+        aria-controls="answer-form"
+        aria-expanded="false"
+        data-answer-form-toggle
+      >
+        Antwort verfassen
+      </button>
+    </header>
+
+    <section
+      id="answer-form"
+      class="answer-form-section"
+      data-answer-form-section
+      hidden
+    >
+      <form
+        class="question-form"
+        action="/api/questions/{{ question.id }}/answers"
+        method="post"
+      >
+        <label for="answer-body">Deine Antwort</label>
+        <textarea
+          id="answer-body"
+          name="body"
+          placeholder="Teile dein Wissen..."
+          required
+        ></textarea>
+
+        <div class="question-form__actions">
+          <button class="primary-button" type="submit">Antworten</button>
+        </div>
+      </form>
+    </section>
+
+    {% if answers.length > 0 %}
+    <ul class="answer-list">
+      {% for answer in answers %}
+      <li class="answer-card">
+        <p class="answer-card__body">{{ answer.body }}</p>
+        <footer class="answer-card__footer">
+          <div class="answer-card__author">
+            <span class="avatar">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="3.5" />
+                <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
+              </svg>
+            </span>
+            <strong>{{ answer.createdById }}</strong>
+          </div>
+          <time datetime="{{ answer.createdAt }}"
+            >{{ answer.createdAtFormatted }}</time
+          >
+        </footer>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty-state empty-state--compact">
+      <h2>Noch keine Antworten</h2>
+      <p>Starte die Diskussion und teile dein Wissen.</p>
+    </div>
+    {% endif %}
+  </section>
+</div>
+<script src="/answer-form.js" defer></script>
+{% endblock %}
