@@ -3,88 +3,73 @@ import { randomUUID } from "node:crypto";
 import type {
   CreateQuestionInput,
   Question,
+  QuestionWithAnswerCount,
   UpdateQuestionInput,
-} from "../types/question";
-import { questions } from "../data/questions";
+} from "@/types/question";
+
+import {
+  deleteQuestionById,
+  findAllQuestions,
+  findAllQuestionsWithAnswerCount,
+  findQuestionById,
+  findQuestionsByTitle,
+  insertQuestion,
+  updateQuestionById,
+} from "@/repositories/questionRepository";
 
 export function getQuestions(): Question[] {
-  return questions;
+  return findAllQuestions();
 }
 
-export function getQuestionById(questionId: string): Question {
-  const question = questions.find((question) => question.id === questionId);
+export function getQuestionsWithAnswerCount(): QuestionWithAnswerCount[] {
+  return findAllQuestionsWithAnswerCount();
+}
 
-  if (!question) {
-    throw new Error("Question not found");
+export function getQuestionById(questionId: string): Question | undefined {
+  return findQuestionById(questionId);
+}
+
+export function getQuestionsByTitle(searchTerm: string): Question[] {
+  const normalizedSearchTerm = searchTerm.trim();
+
+  if (!normalizedSearchTerm) {
+    return findAllQuestions();
   }
 
-  return question;
+  return findQuestionsByTitle(normalizedSearchTerm);
 }
-
-export const getQuestionsByTitle = (value: string) => {
-  return questions.filter((q) =>
-    q.title.toLowerCase().includes(value.toLowerCase()),
-  );
-};
 
 export function createQuestion(
   userId: string,
   input: CreateQuestionInput,
 ): Question {
-  if (!input.title?.trim()) {
-    throw new Error("Title is required");
-  }
-
-  if (!input.body?.trim()) {
-    throw new Error("Body is required");
-  }
-
   const question: Question = {
     id: randomUUID(),
     title: input.title.trim(),
     body: input.body.trim(),
-    createdAt: new Date(),
+    createdAt: new Date().toISOString(),
     createdById: userId,
   };
 
-  questions.push(question);
-
-  return question;
+  return insertQuestion(question);
 }
 
 export function updateQuestion(
   questionId: string,
   input: UpdateQuestionInput,
-): Question {
-  const question = getQuestionById(questionId);
+): Question | undefined {
+  const existingQuestion = findQuestionById(questionId);
 
-  if (input.title !== undefined) {
-    if (!input.title.trim()) {
-      throw new Error("Title cannot be empty");
-    }
-
-    question.title = input.title.trim();
+  if (!existingQuestion) {
+    return undefined;
   }
 
-  if (input.body !== undefined) {
-    if (!input.body.trim()) {
-      throw new Error("Body cannot be empty");
-    }
+  const title = input.title?.trim() ?? existingQuestion.title;
+  const body = input.body?.trim() ?? existingQuestion.body;
 
-    question.body = input.body.trim();
-  }
-
-  return question;
+  return updateQuestionById(questionId, title, body);
 }
 
-export function deleteQuestion(questionId: string): void {
-  const questionIndex = questions.findIndex(
-    (question) => question.id === questionId,
-  );
-
-  if (questionIndex === -1) {
-    throw new Error("Question not found");
-  }
-
-  questions.splice(questionIndex, 1);
+export function deleteQuestion(questionId: string): boolean {
+  return deleteQuestionById(questionId);
 }

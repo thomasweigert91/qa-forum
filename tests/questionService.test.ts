@@ -38,6 +38,7 @@ describe("questionService", () => {
 
   test("returns undefined when a question does not exist", () => {
     const result = getQuestionById("unknown-id");
+    console.log(result);
     expect(result).toBeUndefined();
   });
 
@@ -77,6 +78,10 @@ describe("questionService", () => {
       body: "IST UPDATED",
       title: "DIES WURDE UPDATED",
     });
+
+    if (!updatedQuestion) {
+      throw new Error("Expected question to be updated");
+    }
 
     expect(updatedQuestion.title).toBe("DIES WURDE UPDATED");
     expect(getQuestionById(question.id)).toEqual(updatedQuestion);

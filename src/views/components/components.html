@@ -1,0 +1,17 @@
+{% macro questionCard(question) %}
+  <article class="question-card">
+    <header class="question-card__header">
+      <h2 class="question-card__title">
+        <a href="/questions/{{ question.id }}">{{ question.title }}</a>
+      </h2>
+      <span class="question-card__badge">Beantwortet</span>
+    </header>
+
+    <p class="question-card__body">{{ question.body }}</p>
+
+    <footer class="question-card__footer">
+      <span>Von {{ question.createdById }}</span>
+      <a href="/questions/{{ question.id }}">Frage ansehen</a>
+    </footer>
+  </article>
+{% endmacro %}

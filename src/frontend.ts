@@ -1,22 +1,14 @@
-import {
-  createQuestion,
-  deleteQuestion,
-  getQuestionById,
-  getQuestions,
-  updateQuestion,
-} from "./services/questionService";
+import { createAnswer } from "./services/answerServices";
+import { createQuestion, getQuestions } from "./services/questionService";
+
+const answer = createAnswer(
+  crypto.randomUUID(),
+  "d7e6562f-aab8-4b66-8c68-b6993e7ed580",
+  { body: "Noch eine Test Antwort" },
+);
+
+console.log(answer);
 
 const questions = getQuestions();
-const question = getQuestionById("question-4");
-console.log("single-question", question);
-
-const newQuestion = createQuestion("user-3", {
-  body: "Warum ist die Banane krumm",
-  title: "Dumme Frage",
-});
-console.log("new Question", newQuestion);
-console.log(questions);
-
-console.log(questions);
 
 console.log(questions);
