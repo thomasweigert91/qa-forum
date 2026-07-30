@@ -22,7 +22,7 @@ Forum{% endblock %} {% block content %}
         <strong>{{ question.createdById }}</strong>
         <span aria-hidden="true">·</span>
         <time datetime="{{ question.createdAt }}"
-          >{{ question.createdAtFormatted }}</time
+          >{{ question.createdAt }}</time
         >
       </div>
     </header>
@@ -90,9 +90,7 @@ Forum{% endblock %} {% block content %}
             </span>
             <strong>{{ answer.createdById }}</strong>
           </div>
-          <time datetime="{{ answer.createdAt }}"
-            >{{ answer.createdAtFormatted }}</time
-          >
+          <time datetime="{{ answer.createdAt }}">{{ answer.createdAt }}</time>
         </footer>
       </li>
       {% endfor %}

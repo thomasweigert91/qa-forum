@@ -19,3 +19,9 @@ export type UpdateQuestionInput = {
   title?: string;
   body?: string;
 };
+
+export type QuestionWithFormattedDate = Question & {
+  createdAtFormatted: string;
+};
+
+export type QuestionParams = Pick<Question, "id">;

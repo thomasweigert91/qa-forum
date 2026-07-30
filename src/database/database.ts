@@ -2,7 +2,7 @@ import { Database } from "bun:sqlite";
 import fs from "node:fs";
 import path from "node:path";
 
-const databaseDirectory = path.join(process.cwd(), "src/data");
+const databaseDirectory = path.join(process.cwd(), "src/database");
 const databasePath = path.join(databaseDirectory, "qa-forum.sqlite");
 
 const dbPath = process.env["DATABASE_PATH"] ?? databasePath;

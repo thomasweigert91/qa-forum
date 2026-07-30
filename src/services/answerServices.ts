@@ -10,6 +10,7 @@ import {
   insertAnswer,
   updateAnswerById,
 } from "@/repositories/answersRepository";
+import { formatDate } from "@/utils/formatDate";
 
 export function createAnswer(
   userId: string,
@@ -44,7 +45,9 @@ export function getAnswerById(answerId: string): Answer | undefined {
 }
 
 export function getAnswersByQuestionId(questionId: string): Answer[] {
-  return findAnswersByQuestionId(questionId);
+  const answers = findAnswersByQuestionId(questionId);
+
+  return answers.map((a) => ({ ...a, createdAt: formatDate(a.createdAt) }));
 }
 
 export function updateAnswer(

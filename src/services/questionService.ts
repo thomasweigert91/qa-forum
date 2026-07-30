@@ -16,17 +16,25 @@ import {
   insertQuestion,
   updateQuestionById,
 } from "@/repositories/questionRepository";
+import { formatDate } from "@/utils/formatDate";
 
 export function getQuestions(): Question[] {
   return findAllQuestions();
 }
 
 export function getQuestionsWithAnswerCount(): QuestionWithAnswerCount[] {
-  return findAllQuestionsWithAnswerCount();
+  const rawQuestionsWithAnswerCount = findAllQuestionsWithAnswerCount();
+
+  return rawQuestionsWithAnswerCount.map((question) => ({
+    ...question,
+    createdAtFormatted: formatDate(question.createdAt),
+  }));
 }
 
 export function getQuestionById(questionId: string): Question | undefined {
-  return findQuestionById(questionId);
+  const question = findQuestionById(questionId);
+  if (!question) return;
+  return { ...question, createdAt: formatDate(question.createdAt) };
 }
 
 export function getQuestionsByTitle(searchTerm: string): Question[] {

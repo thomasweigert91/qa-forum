@@ -371,9 +371,9 @@ main {
 .create-page h1 {
   margin: 0;
   color: var(--text);
-  font-size: clamp(2.25rem, 3.2vw, 3rem);
+  font-size: clamp(2.35rem, 3.5vw, 3.2rem);
   line-height: 1.08;
-  letter-spacing: -0.04em;
+  letter-spacing: 0.025em;
 }
 
 .question-overview__intro {
@@ -568,16 +568,13 @@ main {
 .question-card__link {
   color: var(--text);
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .question-card__link::after {
   position: absolute;
   inset: 0;
   content: "";
-}
-
-.question-card__link:hover {
-  color: #fff;
 }
 
 .question-card__body {
