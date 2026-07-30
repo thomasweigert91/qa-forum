@@ -447,7 +447,7 @@ main {
 .question-card {
   position: relative;
   display: grid;
-  grid-template-columns: 105px minmax(0, 1fr) 28px;
+  grid-template-columns: 105px minmax(0, 1fr) auto;
   gap: 24px;
   min-width: 0;
   min-height: 196px;
@@ -466,22 +466,46 @@ main {
 }
 
 .question-card__delete-form {
-  justify-self: end;
+  position: relative;
+  z-index: 2;
 }
 
 .question-card__delete-button {
-  padding: 8px 12px;
-  border: 1px solid #c62828;
-  border-radius: 8px;
-  background: transparent;
-  color: #c62828;
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   font: inherit;
+  color: #ff6670;
+  background: rgb(198 40 40 / 0.08);
+  border: 1px solid rgb(255 82 92 / 0.78);
+  border-radius: 8px;
   cursor: pointer;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.question-card__delete-button svg {
+  width: 21px;
+  height: 21px;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
 }
 
 .question-card__delete-button:hover {
   background-color: #c62828;
   color: #fff;
+  border-color: #ff6670;
+  transform: translateY(-1px);
 }
 
 .question-card__delete-button:focus-visible {
@@ -566,6 +590,7 @@ main {
 }
 
 .question-card__link {
+  position: static;
   color: var(--text);
   text-decoration: none;
   transition: color 0.3s ease;
@@ -651,22 +676,43 @@ main {
   position: relative;
   z-index: 2;
   display: grid;
-  width: 28px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   color: #9bacce;
-  background: transparent;
-  border: 0;
-  place-items: start center;
+  background: rgb(148 164 190 / 0.08);
+  border: 1px solid rgb(148 164 190 / 0.24);
+  border-radius: 8px;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
 }
 
 .bookmark-button:hover {
   color: var(--accent-bright);
+  background: rgb(139 92 246 / 0.14);
+  border-color: rgb(167 139 250 / 0.65);
+  transform: translateY(-1px);
 }
 
 .bookmark-button svg {
   width: 21px;
   height: 21px;
+  fill: none !important;
+  stroke: currentColor !important;
+}
+
+.question-card__actions {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: auto;
 }
 
 .question-card--2 .question-card__answer-icon {

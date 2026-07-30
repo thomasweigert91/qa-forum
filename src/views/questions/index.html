@@ -80,29 +80,45 @@ endblock %} {% block content %}
             </time>
           </footer>
         </div>
-        <div>
+        <div class="question-card__actions">
           <button
             class="bookmark-button"
             type="button"
             aria-label="Frage merken"
           >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M6 4.8A1.8 1.8 0 0 1 7.8 3h8.4A1.8 1.8 0 0 1 18 4.8V21l-6-4-6 4Z"
-              />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="#000000"
+            >
+              <g
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M21 23.25H5.25A2.25 2.25 0 0 1 3 21m9-18.75H6a3 3 0 0 0-3 3V21a2.25 2.25 0 0 1 2.25-2.25h15A.75.75 0 0 0 21 18V3a.75.75 0 0 0-.75-.75H18m1.5 21v-4.5"
+                />
+                <path
+                  d="m18 12.75l-3-3l-3 3V2.25a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5z"
+                />
+              </g>
             </svg>
           </button>
           <form
-            action="/questions/{{ question.id }}/delete"
+            action="/api/questions/{{ question.id }}"
             method="post"
             class="question-card__delete-form"
           >
-            <button
-              type="submit"
-              class="question-card__delete-button"
-              aria-label="Frage {{ question.title }} löschen"
-            >
-              Löschen
+            <button type="submit" class="question-card__delete-button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M1 5h22m-8.75-4h-4.5a1.5 1.5 0 0 0-1.5 1.5V5h7.5V2.5a1.5 1.5 0 0 0-1.5-1.5m-4.5 16.75v-7.5m4.5 7.5v-7.5m4.61 11.37A1.49 1.49 0 0 1 17.37 23H6.63a1.49 1.49 0 0 1-1.49-1.38L3.75 5h16.5z"
+                />
+              </svg>
             </button>
           </form>
         </div>

@@ -3,7 +3,6 @@ import {
   getQuestionById,
   getQuestionsWithAnswerCount,
 } from "@/services/questionService";
-import { formatDate } from "@/utils/formatDate";
 import type { Request, Response } from "express";
 
 export const renderIndexPage = (_req: Request, res: Response) => {
@@ -39,3 +38,4 @@ export const renderQuestionDetailPage = (
     answers,
   });
 };
+
