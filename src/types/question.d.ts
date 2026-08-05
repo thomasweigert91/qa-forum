@@ -1,12 +1,17 @@
 export type Question = {
-  id: string;
+  id: number;
   title: string;
   body: string;
   createdAt: string;
-  createdById: string;
+  createdById: number;
+  createdByUsername?: string;
 };
 
-export type QuestionWithAnswerCount = Question & {
+export type QuestionWithAuthor = Question & {
+  createdByUsername: string;
+};
+
+export type QuestionWithAnswerCount = QuestionWithAuthor & {
   answerCount: number;
 };
 
@@ -24,4 +29,8 @@ export type QuestionWithFormattedDate = Question & {
   createdAtFormatted: string;
 };
 
-export type QuestionParams = Pick<Question, "id">;
+export type QuestionParams = {
+  id: string;
+};
+
+export type CreateQuestionRecord = Omit<Question, "id">;

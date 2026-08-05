@@ -1,46 +1,19 @@
 import { db } from "@/database/database";
-import type { Question, QuestionWithAnswerCount } from "@/types/question";
+import type {
+  CreateQuestionRecord,
+  Question,
+  QuestionWithAuthor,
+  QuestionWithAnswerCount,
+} from "@/types/question";
 
-export type QuestionRow = {
-  id: string;
-  title: string;
-  body: string;
-  created_at: string;
-  created_by_id: string;
+type QuestionWithAnswerCountRow = QuestionWithAuthor & {
+  answerCount: number;
 };
 
-type QuestionWithAnswerCountRow = QuestionRow & {
-  answer_count: number;
-};
-
-export function mapQuestionRow(row: QuestionRow): Question {
-  return {
-    id: row.id,
-    title: row.title,
-    body: row.body,
-    createdAt: row.created_at,
-    createdById: row.created_by_id,
-  };
-}
-
-function mapQuestionWithAnswerCountRow(
-  row: QuestionWithAnswerCountRow,
-): QuestionWithAnswerCount {
-  return {
-    ...mapQuestionRow(row),
-    answerCount: row.answer_count,
-  };
-}
-
-const findAllStatement = db.query<QuestionRow, []>(`
-  SELECT
-    id,
-    title,
-    body,
-    created_at,
-    created_by_id
+const findAllStatement = db.query<Question, []>(`
+  SELECT id, title, body, createdAt, createdById
   FROM questions
-  ORDER BY created_at DESC
+  ORDER BY createdAt DESC
 `);
 
 const findAllWithAnswerCountStatement = db.query<
@@ -51,140 +24,96 @@ const findAllWithAnswerCountStatement = db.query<
     questions.id,
     questions.title,
     questions.body,
-    questions.created_at,
-    questions.created_by_id,
-    COUNT(answers.id) AS answer_count
+    questions.createdAt,
+    questions.createdById,
+    users.username AS createdByUsername,
+    COUNT(answers.id) AS answerCount
   FROM questions
-  LEFT JOIN answers
-    ON answers.question_id = questions.id
+  JOIN users ON users.id = questions.createdById
+  LEFT JOIN answers ON answers.questionId = questions.id
   GROUP BY
     questions.id,
     questions.title,
     questions.body,
-    questions.created_at,
-    questions.created_by_id
-  ORDER BY questions.created_at DESC
+    questions.createdAt,
+    questions.createdById,
+    users.username
+  ORDER BY questions.createdAt DESC
 `);
 
-const findByIdStatement = db.query<QuestionRow, [string]>(`
-  SELECT
-    id,
-    title,
-    body,
-    created_at,
-    created_by_id
+const findByIdStatement = db.query<Question, [number]>(`
+  SELECT questions.id, questions.title, questions.body, questions.createdAt,
+    questions.createdById, users.username AS createdByUsername
   FROM questions
-  WHERE id = ?
+  JOIN users ON users.id = questions.createdById
+  WHERE questions.id = ?
 `);
 
-const findByTitleStatement = db.query<QuestionRow, [string]>(`
-  SELECT
-    id,
-    title,
-    body,
-    created_at,
-    created_by_id
+const findByTitleStatement = db.query<Question, [string]>(`
+  SELECT id, title, body, createdAt, createdById
   FROM questions
   WHERE title LIKE ?
-  ORDER BY created_at DESC
+  ORDER BY createdAt DESC
 `);
 
-const createStatement = db.query<QuestionRow, Question>(`
-  INSERT INTO questions (
-    id,
-    title,
-    body,
-    created_at,
-    created_by_id
-  )
-  VALUES (
-    $id,
-    $title,
-    $body,
-    $createdAt,
-    $createdById
-  )
-  RETURNING
-    id,
-    title,
-    body,
-    created_at,
-    created_by_id
+const createStatement = db.query<Question, CreateQuestionRecord>(`
+  INSERT INTO questions (title, body, createdAt, createdById)
+  VALUES ($title, $body, $createdAt, $createdById)
+  RETURNING id, title, body, createdAt, createdById
 `);
 
 const updateStatement = db.query<
-  QuestionRow,
-  {
-    questionId: string;
-    title: string;
-    body: string;
-  }
+  Question,
+  { questionId: number; title: string; body: string }
 >(`
   UPDATE questions
-  SET
-    title = $title,
-    body = $body
+  SET title = $title, body = $body
   WHERE id = $questionId
-  RETURNING
-    id,
-    title,
-    body,
-    created_at,
-    created_by_id
+  RETURNING id, title, body, createdAt, createdById
 `);
 
-const deleteStatement = db.query<null, [string]>(`
+const deleteStatement = db.query<null, [number]>(`
   DELETE FROM questions
   WHERE id = ?
 `);
 
 export function findAllQuestions(): Question[] {
-  return findAllStatement.all().map(mapQuestionRow);
+  return findAllStatement.all();
 }
 
 export function findAllQuestionsWithAnswerCount(): QuestionWithAnswerCount[] {
-  return findAllWithAnswerCountStatement
-    .all()
-    .map(mapQuestionWithAnswerCountRow);
+  return findAllWithAnswerCountStatement.all();
 }
 
-export function findQuestionById(questionId: string): Question | undefined {
-  const row = findByIdStatement.get(questionId);
-
-  return row ? mapQuestionRow(row) : undefined;
+export function findQuestionById(
+  questionId: number,
+): Question | undefined {
+  return findByIdStatement.get(questionId) ?? undefined;
 }
 
 export function findQuestionsByTitle(searchTerm: string): Question[] {
-  const rows = findByTitleStatement.all(`%${searchTerm}%`);
-
-  return rows.map(mapQuestionRow);
+  return findByTitleStatement.all(`%${searchTerm}%`);
 }
 
-export function insertQuestion(question: Question): Question {
+export function insertQuestion(question: CreateQuestionRecord): Question {
   const row = createStatement.get(question);
 
   if (!row) {
     throw new Error("Question could not be created");
   }
 
-  return mapQuestionRow(row);
+  return row;
 }
 
 export function updateQuestionById(
-  questionId: string,
+  questionId: number,
   title: string,
   body: string,
 ): Question | undefined {
-  const row = updateStatement.get({
-    questionId,
-    title,
-    body,
-  });
-
-  return row ? mapQuestionRow(row) : undefined;
+  return updateStatement.get({ questionId, title, body }) ?? undefined;
 }
 
-export function deleteQuestionById(questionId: string): boolean {
+export function deleteQuestionById(questionId: number): boolean {
   const result = deleteStatement.run(questionId);
 
   return result.changes > 0;

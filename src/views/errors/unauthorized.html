@@ -1,0 +1,13 @@
+{% extends "layouts/base.html" %} {% block title %}Anmeldung erforderlich | QA
+Forum{% endblock %} {% block content %}
+<section class="status-page">
+  <span class="status-page__icon" aria-hidden="true">!</span>
+  <p class="question-overview__eyebrow">Zugriff nicht möglich</p>
+  <h1>Du musst angemeldet sein</h1>
+  <p>
+    Für diese Seite benötigst du ein Benutzerkonto. Melde dich an, um
+    fortzufahren.
+  </p>
+  <a class="primary-button" href="/login">Zur Login-Seite</a>
+</section>
+{% endblock %}

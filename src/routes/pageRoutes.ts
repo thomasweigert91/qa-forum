@@ -4,10 +4,11 @@ import {
   renderCreateQuestionPage,
   renderIndexPage,
   renderQuestionDetailPage,
-} from "@/controllers/pageRouteController";
+} from "@/controllers/pageController";
+import { requireAuth } from "@/middleware/requireAuth";
 
 export const pageRouter = Router();
 
 pageRouter.get("/", renderIndexPage);
-pageRouter.get("/new", renderCreateQuestionPage);
+pageRouter.get("/new", requireAuth, renderCreateQuestionPage);
 pageRouter.get("/questions/:id", renderQuestionDetailPage);

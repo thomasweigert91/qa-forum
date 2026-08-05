@@ -1,5 +1,3 @@
-import { randomUUID } from "node:crypto";
-
 import type {
   CreateQuestionInput,
   Question,
@@ -31,7 +29,9 @@ export function getQuestionsWithAnswerCount(): QuestionWithAnswerCount[] {
   }));
 }
 
-export function getQuestionById(questionId: string): Question | undefined {
+export function getQuestionById(
+  questionId: number,
+): Question | undefined {
   const question = findQuestionById(questionId);
   if (!question) return;
   return { ...question, createdAt: formatDate(question.createdAt) };
@@ -48,11 +48,10 @@ export function getQuestionsByTitle(searchTerm: string): Question[] {
 }
 
 export function createQuestion(
-  userId: string,
+  userId: number,
   input: CreateQuestionInput,
 ): Question {
-  const question: Question = {
-    id: randomUUID(),
+  const question = {
     title: input.title.trim(),
     body: input.body.trim(),
     createdAt: new Date().toISOString(),
@@ -63,7 +62,7 @@ export function createQuestion(
 }
 
 export function updateQuestion(
-  questionId: string,
+  questionId: number,
   input: UpdateQuestionInput,
 ): Question | undefined {
   const existingQuestion = findQuestionById(questionId);
@@ -78,6 +77,6 @@ export function updateQuestion(
   return updateQuestionById(questionId, title, body);
 }
 
-export function deleteQuestion(questionId: string): boolean {
+export function deleteQuestion(questionId: number): boolean {
   return deleteQuestionById(questionId);
 }

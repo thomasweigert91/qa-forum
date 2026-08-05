@@ -62,7 +62,7 @@ endblock %} {% block content %}
                 </svg>
               </span>
               <span>
-                <strong>{{ question.createdById }}</strong>
+                <strong>{{ question.createdByUsername }}</strong>
                 <small>Erstellt von</small>
               </span>
             </div>
@@ -106,7 +106,7 @@ endblock %} {% block content %}
             </svg>
           </button>
           <form
-            action="/api/questions/{{ question.id }}"
+            action="/questions/{{ question.id }}/delete"
             method="post"
             class="question-card__delete-form"
           >

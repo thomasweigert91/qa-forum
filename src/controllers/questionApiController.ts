@@ -3,7 +3,6 @@ import {
   createQuestion,
   deleteQuestion,
   getQuestionById,
-  getQuestions,
   updateQuestion,
 } from "@/services/questionService";
 import type { Answer, CreateAnswerInput } from "@/types/answer";
@@ -16,12 +15,6 @@ import type {
 } from "@/types/question";
 import type { Request, Response } from "express";
 
-export const getQuestionsController = (_req: Request, res: Response) => {
-  const questions = getQuestions();
-
-  res.json(questions);
-};
-
 export const getQuestionsByIdController = (
   req: Request<QuestionParams, Question | ErrorResponse>,
   res: Response<Question | ErrorResponse>,
@@ -29,8 +22,9 @@ export const getQuestionsByIdController = (
   try {
     console.log(req.params);
     const { id } = req.params;
+    const questionId = Number(id);
 
-    const question = getQuestionById(id);
+    const question = getQuestionById(questionId);
 
     res.json(question);
   } catch (error) {
@@ -47,8 +41,7 @@ export const createQuestionController = (
   try {
     const input = req.body;
 
-    // Placeholder until authentication is implemented
-    createQuestion("user-1", input);
+    createQuestion(req.userId!, input);
 
     res.status(201).redirect("/");
   } catch (error) {
@@ -64,12 +57,12 @@ export const createAnswerController = (
 ) => {
   try {
     const { id } = req.params;
+    const questionId = Number(id);
 
-    // Placeholder until authentication is implemented
-    const answer = createAnswer("user-1", id, req.body);
+    const answer = createAnswer(req.userId!, questionId, req.body);
 
     if (req.is("application/x-www-form-urlencoded")) {
-      return res.redirect(303, `/questions/${id}`);
+      return res.redirect(303, `/questions/${questionId}`);
     }
 
     return res.status(201).json(answer);
@@ -86,9 +79,10 @@ export const updateQuestionController = (
 ) => {
   try {
     const { id } = req.params;
+    const questionId = Number(id);
     const input = req.body;
 
-    const question = updateQuestion(id, input);
+    const question = updateQuestion(questionId, input);
 
     res.json(question);
   } catch (error) {
@@ -104,10 +98,15 @@ export const deleteQuestionController = (
 ) => {
   try {
     const { id } = req.params;
+    const questionId = Number(id);
 
-    deleteQuestion(id);
+    deleteQuestion(questionId);
 
-    res.status(204).send();
+    if (req.is("application/x-www-form-urlencoded")) {
+      return res.redirect(303, "/");
+    }
+
+    return res.status(204).send();
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
 

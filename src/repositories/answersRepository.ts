@@ -1,126 +1,72 @@
 import { db } from "@/database/database";
-import type { Answer } from "@/types/answer";
+import type {
+  Answer,
+  AnswerWithAuthor,
+  CreateAnswerRecord,
+} from "@/types/answer";
 
-export type AnswerRow = {
-  id: string;
-  question_id: string;
-  body: string;
-  created_at: string;
-  created_by_id: string;
-};
-
-export function mapAnswerRow(row: AnswerRow): Answer {
-  return {
-    id: row.id,
-    questionId: row.question_id,
-    body: row.body,
-    createdAt: row.created_at,
-    createdById: row.created_by_id,
-  };
-}
-
-const findAnswerByIdStatement = db.query<AnswerRow, [string]>(`
-  SELECT
-    id,
-    question_id,
-    body,
-    created_at,
-    created_by_id
+const findAnswerByIdStatement = db.query<Answer, [number]>(`
+  SELECT id, questionId, body, createdAt, createdById
   FROM answers
   WHERE id = ?
 `);
 
-const findAnswersByQuestionIdStatement = db.query<AnswerRow, [string]>(`
-  SELECT
-    id,
-    question_id,
-    body,
-    created_at,
-    created_by_id
+const findAnswersByQuestionIdStatement = db.query<AnswerWithAuthor, [number]>(`
+  SELECT answers.id, answers.questionId, answers.body, answers.createdAt,
+    answers.createdById, users.username AS createdByUsername
   FROM answers
-  WHERE question_id = ?
-  ORDER BY created_at DESC
+  JOIN users ON users.id = answers.createdById
+  WHERE answers.questionId = ?
+  ORDER BY answers.createdAt DESC
 `);
 
-const createAnswerStatement = db.query<AnswerRow, Answer>(`
-  INSERT INTO answers (
-    id,
-    question_id,
-    body,
-    created_at,
-    created_by_id
-  )
-  VALUES (
-    $id,
-    $questionId,
-    $body,
-    $createdAt,
-    $createdById
-  )
-  RETURNING
-    id,
-    question_id,
-    body,
-    created_at,
-    created_by_id
+const createAnswerStatement = db.query<Answer, CreateAnswerRecord>(`
+  INSERT INTO answers (questionId, body, createdAt, createdById)
+  VALUES ($questionId, $body, $createdAt, $createdById)
+  RETURNING id, questionId, body, createdAt, createdById
 `);
 
 const updateAnswerStatement = db.query<
-  AnswerRow,
-  {
-    answerId: string;
-    body: string;
-  }
+  Answer,
+  { answerId: number; body: string }
 >(`
   UPDATE answers
   SET body = $body
   WHERE id = $answerId
-  RETURNING
-    id,
-    question_id,
-    body,
-    created_at,
-    created_by_id
+  RETURNING id, questionId, body, createdAt, createdById
 `);
 
-const deleteAnswerStatement = db.query<null, [string]>(`
+const deleteAnswerStatement = db.query<null, [number]>(`
   DELETE FROM answers
   WHERE id = ?
 `);
 
-export function findAnswerById(answerId: string): Answer | undefined {
-  const row = findAnswerByIdStatement.get(answerId);
-
-  return row ? mapAnswerRow(row) : undefined;
+export function findAnswerById(answerId: number): Answer | undefined {
+  return findAnswerByIdStatement.get(answerId) ?? undefined;
 }
 
-export function findAnswersByQuestionId(questionId: string): Answer[] {
-  return findAnswersByQuestionIdStatement.all(questionId).map(mapAnswerRow);
+export function findAnswersByQuestionId(questionId: number): Answer[] {
+  return findAnswersByQuestionIdStatement.all(questionId);
 }
 
-export function insertAnswer(answer: Answer): Answer {
+export function insertAnswer(answer: CreateAnswerRecord): Answer {
   const row = createAnswerStatement.get(answer);
 
   if (!row) {
     throw new Error("Answer could not be created");
   }
 
-  return mapAnswerRow(row);
+  return row;
 }
 
 export function updateAnswerById(
-  answerId: string,
+  answerId: number,
   body: string,
 ): Answer | undefined {
-  const row = updateAnswerStatement.get({
-    answerId,
-    body,
-  });
-
-  return row ? mapAnswerRow(row) : undefined;
+  return updateAnswerStatement.get({ answerId, body }) ?? undefined;
 }
 
-export function deleteAnswerById(answerId: string): boolean {
+export function deleteAnswerById(answerId: number): boolean {
   const result = deleteAnswerStatement.run(answerId);
 
   return result.changes > 0;

@@ -1,6 +1,8 @@
-import { randomUUID } from "node:crypto";
-
-import type { Answer, CreateAnswerInput } from "@/types/answer";
+import type {
+  Answer,
+  CreateAnswerInput,
+  CreateAnswerRecord,
+} from "@/types/answer";
 
 import { getQuestionById } from "@/services/questionService";
 import {
@@ -13,8 +15,8 @@ import {
 import { formatDate } from "@/utils/formatDate";
 
 export function createAnswer(
-  userId: string,
-  questionId: string,
+  userId: number,
+  questionId: number,
   input: CreateAnswerInput,
 ): Answer {
   const question = getQuestionById(questionId);
@@ -29,8 +31,7 @@ export function createAnswer(
     throw new Error("Body is required");
   }
 
-  const answer: Answer = {
-    id: randomUUID(),
+  const answer: CreateAnswerRecord = {
     questionId,
     body,
     createdAt: new Date().toISOString(),
@@ -40,19 +41,19 @@ export function createAnswer(
   return insertAnswer(answer);
 }
 
-export function getAnswerById(answerId: string): Answer | undefined {
+export function getAnswerById(answerId: number): Answer | undefined {
   return findAnswerById(answerId);
 }
 
-export function getAnswersByQuestionId(questionId: string): Answer[] {
+export function getAnswersByQuestionId(questionId: number): Answer[] {
   const answers = findAnswersByQuestionId(questionId);
 
   return answers.map((a) => ({ ...a, createdAt: formatDate(a.createdAt) }));
 }
 
 export function updateAnswer(
-  answerId: string,
-  userId: string,
+  answerId: number,
+  userId: number,
   input: CreateAnswerInput,
 ): Answer {
   const answer = findAnswerById(answerId);
@@ -84,7 +85,7 @@ export function updateAnswer(
   return updatedAnswer;
 }
 
-export function deleteAnswer(answerId: string, userId: string): boolean {
+export function deleteAnswer(answerId: number, userId: number): boolean {
   const answer = findAnswerById(answerId);
 
   if (!answer) {

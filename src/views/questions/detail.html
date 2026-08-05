@@ -19,7 +19,7 @@ Forum{% endblock %} {% block content %}
             <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
           </svg>
         </span>
-        <strong>{{ question.createdById }}</strong>
+        <strong>{{ question.createdByUsername }}</strong>
         <span aria-hidden="true">·</span>
         <time datetime="{{ question.createdAt }}"
           >{{ question.createdAt }}</time
@@ -58,7 +58,7 @@ Forum{% endblock %} {% block content %}
     >
       <form
         class="question-form"
-        action="/api/questions/{{ question.id }}/answers"
+        action="/questions/{{ question.id }}/answers"
         method="post"
       >
         <label for="answer-body">Deine Antwort</label>
@@ -88,7 +88,7 @@ Forum{% endblock %} {% block content %}
                 <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
               </svg>
             </span>
-            <strong>{{ answer.createdById }}</strong>
+            <strong>{{ answer.createdByUsername }}</strong>
           </div>
           <time datetime="{{ answer.createdAt }}">{{ answer.createdAt }}</time>
         </footer>

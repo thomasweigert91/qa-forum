@@ -13,8 +13,9 @@ export const renderIndexPage = (_req: Request, res: Response) => {
   });
 };
 
-export const renderCreateQuestionPage = (_req: Request, res: Response) => {
-  res.render("questions/create.html");
+export const renderCreateQuestionPage = (req: Request, res: Response) => {
+  const userId = req.userId;
+  res.render("questions/create.html", { userId });
 };
 
 export const renderQuestionDetailPage = (
@@ -22,8 +23,9 @@ export const renderQuestionDetailPage = (
   res: Response,
 ) => {
   const { id } = req.params;
+  const questionId = Number(id);
 
-  const question = getQuestionById(id);
+  const question = getQuestionById(questionId);
 
   if (!question) {
     return res.status(404).render("errors/404.html", {
@@ -31,11 +33,10 @@ export const renderQuestionDetailPage = (
     });
   }
 
-  const answers = getAnswersByQuestionId(id);
+  const answers = getAnswersByQuestionId(questionId);
 
   return res.render("questions/detail.html", {
     question,
     answers,
   });
 };
-
