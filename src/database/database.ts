@@ -3,14 +3,16 @@ import fs from "node:fs";
 import path from "node:path";
 
 const databaseDirectory = path.join(process.cwd(), "src/database");
-const databasePath = path.join(databaseDirectory, "qa-forum.sqlite");
-const dbPath = process.env["DATABASE_PATH"] ?? databasePath;
 
-fs.mkdirSync(databaseDirectory, {
+const databasePath =
+  process.env["DATABASE_PATH"] ??
+  path.join(process.cwd(), "src", "database", "qa-forum.sqlite");
+
+fs.mkdirSync(path.dirname(databasePath), {
   recursive: true,
 });
 
-export const db = new Database(dbPath, {
+export const db = new Database(databasePath, {
   create: true,
   strict: true,
 });

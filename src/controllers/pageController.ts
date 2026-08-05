@@ -23,6 +23,7 @@ export const renderQuestionDetailPage = (
   res: Response,
 ) => {
   const { id } = req.params;
+
   const questionId = Number(id);
 
   const question = getQuestionById(questionId);

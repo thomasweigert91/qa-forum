@@ -39,6 +39,7 @@ Forum{% endblock %} {% block content %}
           %}Antworten{% endif %}
         </h2>
       </div>
+      {% if isLoggedIn %}
       <button
         class="secondary-button"
         type="button"
@@ -48,6 +49,7 @@ Forum{% endblock %} {% block content %}
       >
         Antwort verfassen
       </button>
+      {% endif %}
     </header>
 
     <section
